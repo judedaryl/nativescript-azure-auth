@@ -1,0 +1,3 @@
+#
+platform :ios, '10.0'
+pod 'ADAL', '2.6.3'

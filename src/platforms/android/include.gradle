@@ -1,0 +1,15 @@
+android {
+    productFlavors {
+        "nativescriptadal" {
+            dimension "nativescriptadal"
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "com.microsoft.aad:adal:1.13.+"
+}
