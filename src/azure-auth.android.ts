@@ -13,14 +13,15 @@ export class AzureAuth {
   private redirectUri: string;
   private resourceId: string;
   private userId: string;
+  private promptBehaviour = com.microsoft.aad.adal.PromptBehavior.Always;
+  private CONSOLE_TAG = "[Azure Auth]:";
 
-  // Authority is in the form of https://login.microsoftonline.com/yourtenant.onmicrosoft.com
   constructor(authority: string, clientId: string, resourceId: string, redirectUri: string) {
     this.authority = authority;
     this.clientId = clientId;
     this.resourceId = resourceId;
     this.activity = application.android.foregroundActivity || application.android.startActivity;
-
+    this.redirectUri = redirectUri;
     this.context = new com.microsoft.aad.adal.AuthenticationContext(utils.ad.getApplicationContext(), this.authority, true);
 
     application.android.on('activityResult', (args) => {
@@ -31,22 +32,33 @@ export class AzureAuth {
     });
   }
 
-  public login(fresh): Promise<string> {
+  public login(clearCache?: boolean): Promise<string> {
+    if (typeof clearCache === undefined || clearCache) {
+      this.clearCache();
+      console.log(`Clearing cache for clientID: ${this.clientId}`);
+    }
     return new Promise<string>((resolve: any, reject: any) => {
-      const promptBehaviour = (fresh ? com.microsoft.aad.adal.PromptBehavior.Always : com.microsoft.aad.adal.PromptBehavior.Auto);
       this.context.acquireToken(
         this.activity,
         this.resourceId,
         this.clientId,
         this.redirectUri,
-        promptBehaviour,
+        this.promptBehaviour,
         this.loginHint,
         new com.microsoft.aad.adal.AuthenticationCallback({
           onSuccess(result: com.microsoft.aad.adal.AuthenticationResult): void {
             this.userId = result.getUserInfo().getUserId();
+            console.log(`${this.CONSOLE_TAG} Successfully logged in against ${this.clientId}`);
+            console.log(`${this.CONSOLE_TAG} Token resource set for: ${this.resourceId}`);
+            console.log(`${this.CONSOLE_TAG} Verified login for user: ${result.getUserInfo().getDisplayableId()}`);
+            console.log(`${this.CONSOLE_TAG} User ID: ${this.userId}`);
+            console.log(`${this.CONSOLE_TAG} Token expiry: ${result.getExpiresOn()}`);
             resolve(result.getAccessToken());
           },
           onError(error: javalangException): void {
+            console.log(`${this.CONSOLE_TAG} Error loggin in against ${this.clientId}`);
+            console.log(`${this.CONSOLE_TAG} STACK TRACE`);
+            console.log(error);
             reject(error);
           }
         })
@@ -61,14 +73,23 @@ export class AzureAuth {
         this.clientId,
         this.userId,
         new com.microsoft.aad.adal.AuthenticationCallback({
-          onSuccess(result: com.microsoft.aad.adal.AuthenticationResult): void {
-            resolve(result.getAccessToken());
+          onSuccess(authResult: com.microsoft.aad.adal.AuthenticationResult): void {
+            console.log(`${this.CONSOLE_TAG} Successfully retrieved new token`);
+            resolve(authResult.getAccessToken());
           },
           onError(error: javalangException): void {
+            console.log(`${this.CONSOLE_TAG} Error retrieving access token silently`);
+            console.log(`${this.CONSOLE_TAG} STACK TRACE`);
+            console.log(error);
             reject(error);
           }
         })
       );
     });
+  }
+
+  public clearCache(): void {
+    this.context.getCache().removeAll();
+    console.log(`${this.CONSOLE_TAG} Cleared ADAL cache ${this.clientId}`);
   }
 }

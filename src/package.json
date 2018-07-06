@@ -1,7 +1,7 @@
 {
     "name": "nativescript-azure-auth",
-    "version": "1.0.2",
-    "description": "Authentication against Azure Active directory for a specific tenant for nativescript applications.",
+    "version": "1.0.3",
+    "description": "A nativescript wrapper around the native libraries of Microsoft Azure's Active Directory Authentication Libraries",
     "main": "azure-auth",
     "typings": "index.d.ts",
     "nativescript": {
