@@ -47,17 +47,22 @@ export class AzureAuth {
         this.loginHint,
         new com.microsoft.aad.adal.AuthenticationCallback({
           onSuccess(result: com.microsoft.aad.adal.AuthenticationResult): void {
+            const CONSOLE_TAG = "[Azure Auth]:";
+            const clientId = this.clientId;
+            const resourceId = this.resourceId;
             this.userId = result.getUserInfo().getUserId();
-            console.log(`${this.CONSOLE_TAG} Successfully logged in against ${this.clientId}`);
-            console.log(`${this.CONSOLE_TAG} Token resource set for: ${this.resourceId}`);
-            console.log(`${this.CONSOLE_TAG} Verified login for user: ${result.getUserInfo().getDisplayableId()}`);
-            console.log(`${this.CONSOLE_TAG} User ID: ${this.userId}`);
-            console.log(`${this.CONSOLE_TAG} Token expiry: ${result.getExpiresOn()}`);
+            console.log(`${CONSOLE_TAG} Successfully logged in against ${clientId}`);
+            console.log(`${CONSOLE_TAG} Token resource set for: ${resourceId}`);
+            console.log(`${CONSOLE_TAG} Verified login for user: ${result.getUserInfo().getDisplayableId()}`);
+            console.log(`${CONSOLE_TAG} User ID: ${this.userId}`);
+            console.log(`${CONSOLE_TAG} Token expiry: ${result.getExpiresOn()}`);
             resolve(result.getAccessToken());
           },
           onError(error: javalangException): void {
-            console.log(`${this.CONSOLE_TAG} Error loggin in against ${this.clientId}`);
-            console.log(`${this.CONSOLE_TAG} STACK TRACE`);
+            const CONSOLE_TAG = "[Azure Auth]:";
+            const clientId = this.clientId;
+            console.log(`${CONSOLE_TAG} Error loggin in against ${clientId}`);
+            console.log(`${CONSOLE_TAG} STACK TRACE`);
             console.log(error);
             reject(error);
           }
@@ -69,17 +74,19 @@ export class AzureAuth {
   public getToken(): Promise<string> {
     return new Promise<string>((resolve: any, reject) => {
       this.context.acquireTokenSilentAsync(
-        this.clientId,
+        this.resourceId,
         this.clientId,
         this.userId,
         new com.microsoft.aad.adal.AuthenticationCallback({
           onSuccess(authResult: com.microsoft.aad.adal.AuthenticationResult): void {
-            console.log(`${this.CONSOLE_TAG} Successfully retrieved new token`);
+            const CONSOLE_TAG = "[Azure Auth]:";
+            console.log(`${CONSOLE_TAG} Successfully retrieved new token`);
             resolve(authResult.getAccessToken());
           },
           onError(error: javalangException): void {
-            console.log(`${this.CONSOLE_TAG} Error retrieving access token silently`);
-            console.log(`${this.CONSOLE_TAG} STACK TRACE`);
+            const CONSOLE_TAG = "[Azure Auth]:";
+            console.log(`${CONSOLE_TAG} Error retrieving access token silently`);
+            console.log(`${CONSOLE_TAG} STACK TRACE`);
             console.log(error);
             reject(error);
           }
