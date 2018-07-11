@@ -2,10 +2,6 @@
 
 A nativescript wrapper around the native libraries of Microsoft Azure's Active Directory Authentication Libraries [ADAL for iOS](https://github.com/AzureAD/azure-activedirectory-library-for-objc) and [ADAl for Android](https://github.com/AzureAD/azure-activedirectory-library-for-android).
 
-Add your plugin badges here. See [nativescript-urlhandler](https://github.com/hypery2k/nativescript-urlhandler) for example.
-
-Then describe what's the purpose of your plugin. 
-
 ## Version
 
     Current version: 1.0.3
@@ -32,7 +28,7 @@ const redirectUri: string = "{REPLY-URL}";
 
 @Injectable()
 export class AzureAuthenticationService {
-
+    private azureAuth: AzureAuth;
     constructor() {
         this.azureAuth = new AzureAuth(authority,clientID,resourceId,redirectUri);
     }
