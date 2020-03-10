@@ -2,6 +2,7 @@
 
 import * as application from 'tns-core-modules/application';
 import * as utils from 'tns-core-modules/utils/utils';
+import { AzureUser } from './azure-user.model';
 
 export class AzureAuth {
 
@@ -82,6 +83,39 @@ export class AzureAuth {
             const CONSOLE_TAG = "[Azure Auth]:";
             console.log(`${CONSOLE_TAG} Successfully retrieved new token`);
             resolve(authResult.getAccessToken());
+          },
+          onError(error: javalangException): void {
+            const CONSOLE_TAG = "[Azure Auth]:";
+            console.log(`${CONSOLE_TAG} Error retrieving access token silently`);
+            console.log(`${CONSOLE_TAG} STACK TRACE`);
+            console.log(error);
+            reject(error);
+          }
+        })
+      );
+    });
+  }
+
+  public getUser(): Promise<AzureUser> {
+    return new Promise<AzureUser>((resolve: any, reject) => {
+      this.context.acquireTokenSilentAsync(
+        this.resourceId,
+        this.clientId,
+        this.userId,
+        new com.microsoft.aad.adal.AuthenticationCallback({
+          onSuccess(authResult: com.microsoft.aad.adal.AuthenticationResult): void {
+            const CONSOLE_TAG = "[Azure Auth]:";
+            console.log(`${CONSOLE_TAG} Successfully retrieved new token`);
+            const userInfo = authResult.getUserInfo();
+            const responseUser: AzureUser = {
+              userId: userInfo.getUserId(),
+              expiredOn: userInfo.getPasswordExpiresOn(),
+              familyName: userInfo.getFamilyName(),
+              givenName: userInfo.getGivenName(),
+              identityProvider: userInfo.getIdentityProvider(),
+              uniqueName: userInfo.getDisplayableId()
+            }
+            resolve(responseUser);
           },
           onError(error: javalangException): void {
             const CONSOLE_TAG = "[Azure Auth]:";
