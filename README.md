@@ -18,7 +18,7 @@ Create a authentication service that uses this library.
 
 ``` typescript
 import { Injectable } from "@angular/core";
-import { AzureAuth } from "nativescript-azure-auth";
+import { AzureAuth, AzureUser } from "nativescript-azure-auth";
 
 const azureAuth: AzureAuth;
 const authority: string = "https://login.microsoftonline.com/{TENANT_ID}/oauth2/authorize"
@@ -52,6 +52,18 @@ export class AzureAuthenticationService {
                 console.log(error);
             });
     }
+
+    
+    getUser() {
+        this.azureAuth.getUser()
+            .then((user: AzureUser) => {
+                console.log(`Access token : ${JSON.stringify(user)}`);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
 
     logout() {
         this.azureAuth.clearCache();
