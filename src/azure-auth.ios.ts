@@ -100,7 +100,7 @@ export class AzureAuth {
                         const userInfo = authResult.tokenCacheItem.userInformation;
                         const responseUser: AzureUser = {
                           userId: userInfo.userId,
-                          expiredOn: authResult.tokenCacheItem.expiresOn.toString(),
+                          expiredOn: authResult.tokenCacheItem.expiresOn ? authResult.tokenCacheItem.expiresOn.toString() : '',
                           familyName: userInfo.familyName,
                           givenName: userInfo.givenName,
                           identityProvider: userInfo.identityProvider,

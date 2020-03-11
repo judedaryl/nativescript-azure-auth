@@ -109,7 +109,7 @@ export class AzureAuth {
             const userInfo = authResult.getUserInfo();
             const responseUser: AzureUser = {
               userId: userInfo.getUserId(),
-              expiredOn: userInfo.getPasswordExpiresOn().toString(),
+              expiredOn: userInfo.getPasswordExpiresOn() ? userInfo.getPasswordExpiresOn().toString() : '',
               familyName: userInfo.getFamilyName(),
               givenName: userInfo.getGivenName(),
               identityProvider: userInfo.getIdentityProvider(),
