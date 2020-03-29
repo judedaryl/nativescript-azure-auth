@@ -1,4 +1,7 @@
 /// <reference path="./platforms/ios/typings/adal.ios.d.ts" />
+
+import { AzureUser } from "./azure-user.model";
+
 declare var interop: any;
 declare var NSURL: any;
 export class AzureAuth {
@@ -73,6 +76,37 @@ export class AzureAuth {
                     } else {
                         console.log(`${this.CONSOLE_TAG} Successfully retrieved new token`);
                         resolve(authResult.accessToken);
+                    }
+                }
+            );
+        });
+    }
+
+    public getUser(): Promise<AzureUser> {
+        return new Promise<AzureUser>((resolve, reject) => {
+            this.context
+            .acquireTokenSilentWithResourceClientIdRedirectUriCompletionBlock(
+                this.resourceId,
+                this.clientId,
+                NSURL.URLWithString(this.redirectUri),
+                (authResult: ADAuthenticationResult) => {
+                    if (authResult.error) {
+                        console.log(`${this.CONSOLE_TAG} Error retrieving access token silently`);
+                        console.log(`${this.CONSOLE_TAG} STACK TRACE`);
+                        console.log(authResult.error);
+                        reject(authResult.error);
+                    } else {
+                        console.log(`${this.CONSOLE_TAG} Successfully retrieved new token`);
+                        const userInfo = authResult.tokenCacheItem.userInformation;
+                        const responseUser: AzureUser = {
+                          userId: userInfo.userId,
+                          expiredOn: authResult.tokenCacheItem.expiresOn ? authResult.tokenCacheItem.expiresOn.toString() : '',
+                          familyName: userInfo.familyName,
+                          givenName: userInfo.givenName,
+                          identityProvider: userInfo.identityProvider,
+                          uniqueName: userInfo.uniqueName
+                        }
+                        resolve(responseUser);
                     }
                 }
             );
