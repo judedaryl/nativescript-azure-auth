@@ -2,9 +2,8 @@
 
 A nativescript wrapper around the native libraries of Microsoft Azure's Active Directory Authentication Libraries [ADAL for iOS](https://github.com/AzureAD/azure-activedirectory-library-for-objc) and [ADAl for Android](https://github.com/AzureAD/azure-activedirectory-library-for-android).
 
-## Version
 
-    Current version: 1.0.5
+[![NPM](https://nodei.co/npm/nativescript-azure-auth.png?compact=true)](https://nodei.co/npm/nativescript-azure-auth/)
 ## Installation
 
 
