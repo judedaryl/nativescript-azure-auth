@@ -4,7 +4,7 @@ A nativescript wrapper around the native libraries of Microsoft Azure's Active D
 
 ## Version
 
-    Current version: 1.0.4
+    Current version: 1.0.5
 ## Installation
 
 
