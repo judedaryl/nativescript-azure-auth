@@ -141,8 +141,9 @@ export class TokenInterceptor implements HttpInterceptor {
     
 ## Contributions
 
-Thanks to James Browning for providing help.
-
+* Daryl Clarino
+* James Browning
+* [Alessio Bianchini](https://github.com/alessiobianchini)
 ## License
 
 Apache License Version 2.0, January 2004
